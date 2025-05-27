@@ -7,25 +7,29 @@ Created on Mon May  5 08:42:25 2025
 
 import tkinter as tk
 from tkinter import scrolledtext, simpledialog
-
 from PIL import Image, ImageTk
-
-from Parking import Parking
-from Space import Space
 
 
 class Principal(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.initialize_window()
-        self.parking: Parking = self.initialize_parking()
+    __slots__ = ["charge_initiale", "vitesse_charge"]
 
+    def __init__(self, parking):
+        super().__init__()
+        self.title("Parking électrique")
+        self.resizable(height=True, width=True)
+        self.parking = parking
         # Placement de la boite imaginaire en bas
-        self.bottom_frame: tk.Frame = tk.Frame(self)
+        self.bottom_frame = tk.Frame(self)
         self.bottom_frame.pack(side=tk.BOTTOM, fill="x")
         # PLacement d'une boite imaginaire à gauche
-        self.left_frame: tk.Frame = tk.Frame(self)
+        self.left_frame = tk.Frame(self)
         self.left_frame.pack(side=tk.LEFT, fill="y", expand=True)
+
+        # Hauteur et largeur de la fenêtre graphique
+        self.maximize_window()
+
+        self.fond()
+        self.creer_widget()
 
         self.pourcentage()
         # exemple de renvoi de données : place, présence, pourcentage, temps restant
@@ -33,16 +37,11 @@ class Principal(tk.Tk):
             "Connexion", prompt="Entrez votre nom et votre prénom"
         )
 
-    def initialize_parking(self) -> Parking:
-        parking: Parking = Parking()
-        parking.add_space(Space(1, True, 20, 70))
-        parking.add_space(Space(2, True, 100, 100))
-        parking.add_space(Space(3, True, 90, 50))
-        parking.add_space(Space(4, True, 70, 0))
-        return parking
-
     def creer_widget(self):
         # Boite imaginaire
+
+        # voiture
+        self.fond
 
         # Champ de saisie à gauche du frame
         self.chat = tk.Entry(self.bottom_frame, bd=5, font=("Times New Roman", 14))
@@ -65,7 +64,7 @@ class Principal(tk.Tk):
 
     def fond(self):
         # Chemin vers l'image de fond
-        chemin = "assets/place de parking 3 bataille.png"
+        chemin = "assets/background.png"
         image = Image.open(chemin)
 
         # Adapter l'image à la taille du canvas principal
@@ -87,11 +86,8 @@ class Principal(tk.Tk):
         self.canvases = {}
         self.photos = {}
 
-        for space in self.parking.get_spaces():
-            place = space.number
-            present = space.is_occupied
-            pourcentage = space.percentage
-            temps = space.time_remaining
+        for index, voiture in enumerate(self.parking):
+            place, present, pourcentage, temps = voiture
 
             # Positions x, y pour chaque voiture
             if place == 1:
@@ -123,6 +119,16 @@ class Principal(tk.Tk):
                 )
                 label.place(x=x + 300, y=y + 130)  # Position à côté du canvas
 
+    def maximize_window(self):
+        """
+        Fonction qui permet d'afficher la fenêtre en plein écran
+
+
+        """
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        self.geometry(f"{screen_width}x{screen_height}+0+0")
+
     def recuperer_message(self, event):
         """
         Fonction qui permet d'afficher le message que l'utilisateur a tapé
@@ -153,15 +159,14 @@ class Principal(tk.Tk):
             pourcentage (int): pourcentage de charge de la voiture
         """
         # Déterminer le chemin de l'image selon le pourcentage
-        assets_path: str = "assets/"
         if 0 < pourcentage <= 25:
-            path = "assets/dessin de voiture bleu du dessus rouge horizontale.png"
+            path = "assets/red_car.png"
         elif 26 <= pourcentage <= 50:
-            path = "assets/dessin de voiture bleu du dessus jaune copie bien rognée bien soignée.png"
+            path = "assets/yellow_car.png"
         elif 51 <= pourcentage <= 75:
-            path = "assets/dessin de voiture bleu du dessus vert horizontale.png"
+            path = "assets/green_car.png"
         else:
-            path = "assets/dessin de voiture bleu du dessus horizontale.png"
+            path = "assets/blue_car.png"
 
         # Charger et redimensionner l'image
         image = Image.open(path)
@@ -183,18 +188,20 @@ class Principal(tk.Tk):
             canvas_width // 2, canvas_height // 2, image=photo, anchor=tk.CENTER
         )
 
-    def pourcentage(self):
+    def pourcentage(
+        self,
+    ):
         pass
 
-    def initialize_window(self):
-        self.title("Parking électrique")
-        self.resizable(height=True, width=True)
 
-        self.state("zoomed")
-        self.fond()
-        self.creer_widget()
+parking_1 = [
+    [1, True, 20, 70],
+    [3, True, 90, 50],
+    [4, True, 70, 0],
+    [2, True, 100, 100],
+]
 
 
 if __name__ == "__main__":
-    app = Principal()
+    app = Principal(parking_1)
     app.mainloop()

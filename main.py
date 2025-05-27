@@ -1,35 +1,23 @@
 from Window import Window
-from ImagePath import ImagePath
 from Car import Car
 
 
 class Main:
     def __init__(self) -> None:
         self.window: Window = Window()
-        self.cars: list[Car] = []
         self.initialize_cars()
-
-        for car in self.cars:
-            self.window.display_car(car)
+        self.window.display_cars()
 
     def initialize_cars(self) -> None:
-        blue_car: Car = Car(
-            image_path=ImagePath.BLUE_CAR, x=200, y=130, width=300, height=150
-        )
-        green_car: Car = Car(
-            image_path=ImagePath.GREEN_CAR, x=200, y=460, width=300, height=150
-        )
-        red_car: Car = Car(
-            image_path=ImagePath.RED_CAR, x=730, y=130, width=300, height=150
-        )
-        yellow_car: Car = Car(
-            image_path=ImagePath.YELLOW_CAR, x=730, y=460, width=300, height=150
-        )
+        car_1: Car = Car(place=1, is_present=True, percentage=20, time_remaining=70)
+        car_2: Car = Car(place=2, is_present=True, percentage=100, time_remaining=100)
+        car_3: Car = Car(place=3, is_present=True, percentage=90, time_remaining=50)
+        car_4: Car = Car(place=4, is_present=True, percentage=70, time_remaining=0)
 
-        self.cars.append(red_car)
-        self.cars.append(blue_car)
-        self.cars.append(green_car)
-        self.cars.append(yellow_car)
+        self.window.cars_append(car_1)
+        self.window.cars_append(car_2)
+        self.window.cars_append(car_3)
+        self.window.cars_append(car_4)
 
     def run(self) -> None:
         self.window.mainloop()
