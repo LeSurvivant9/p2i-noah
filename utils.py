@@ -6,11 +6,10 @@ from PIL import Image, UnidentifiedImageError
 
 def open_image(image_path: Path) -> Image.Image:
     """
-    Charge une image depuis un chemin pathlib et retourne une ImageTk.PhotoImage.
-    Arrête le programme si le fichier est introuvable ou corrompu.
+    Ouvre une image à partir du chemin spécifié et la retourne sous forme d'objet PIL Image.
 
-    :param image_path: Chemin vers l'image (format Pathlib.Path)
-    :return: ImageTk.PhotoImage
+    :param path: Chemin du fichier image à ouvrir.
+    :return: Image ouverte sous forme d'objet PIL Image.
     """
     if not image_path.exists():
         print(f"Erreur : le fichier '{image_path}' n'existe pas.", file=sys.stderr)
